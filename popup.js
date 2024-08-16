@@ -63,7 +63,7 @@ const search = event => {
         listItems = filterResult.map(item => `
         <div class="bookmarks-search__list-item" data-url="${ item.url }">${ item.title }</div>
     `).join('')
-        selectUrl = filterResult[0].url
+        selectUrl = filterResult[0]?.url
     }
     list.innerHTML = listItems
     setSelectStatus()
