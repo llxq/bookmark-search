@@ -40,7 +40,7 @@ const createContainer = () => {
         Object.assign(container.style, {
             display: 'initial',
         })
-        focusInput()
+        Promise.resolve().then(focusInput)
         return
     } else {
         container = document.createElement('div')
