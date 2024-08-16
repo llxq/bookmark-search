@@ -1,0 +1,44 @@
+{
+    "manifest_version": 3,
+    "name": "Bookmarks search",
+    "version": "1.0.0",
+    "description": "Search bookmarks",
+        
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "bookmarks",
+        "windows"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "commands": {
+        "open-search-dialog": {
+            "suggested_key": {
+                "default": "Ctrl+B",
+                "mac": "Command+B"
+            },
+            "description": "Toggle a feature"
+        }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "popup.html"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}
