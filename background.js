@@ -3,9 +3,10 @@ const getBookmarks = async () => {
          const bookmarks = []
 
          /* 拿到所有的书签 */
-         const getBookMarksByNode = node => {
+         const getBookMarksByNode = (node, parentTitle = '') => {
+            // 如果没有url，则可能是文件夹。记录父节点的title
              if (node.children) {
-                 node.children.forEach(getBookMarksByNode)
+                 node.children.forEach(n => getBookMarksByNode(n, parentTitle ? `${parentTitle}/${node.title}` : node.title))
              }
              /* 不留存目录，只查询书签 */
              if (node.url && node.title) {
@@ -13,7 +14,8 @@ const getBookmarks = async () => {
                      url: node.url,
                      title: node.title,
                      id: node.id,
-                     parentId: node.parentId
+                     parentId: node.parentId,
+                     parentTitle,
                  })
              }
          }
@@ -29,18 +31,26 @@ const getBookmarks = async () => {
      })
 }
 
-chrome.commands.onCommand.addListener(command => {
-    if (command === 'open-search-dialog') {
-        chrome.tabs.query({active: true, currentWindow: true}, async tabs => {
-            if (tabs[0]) {
-                const url = tabs[0].url
-                if (url && !url.startsWith('chrome://') && !url.startsWith('chrome-extension://')) {
-                    chrome.tabs.sendMessage(tabs[0].id, {action: 'openPopup', bookMarks: await getBookmarks()})
-                } else {
-                    console.warn('Cannot inject script into this page:', url)
+const startListener = () => {
+    chrome.commands.onCommand.addListener(command => {
+        if (command === 'open-search-dialog') {
+            chrome.tabs.query({active: true, currentWindow: true}, async tabs => {
+                if (tabs[0]) {
+                    const url = tabs[0].url
+                    if (url && !url.startsWith('chrome://') && !url.startsWith('chrome-extension://')) {
+                        chrome.tabs.sendMessage(tabs[0].id, {action: 'openPopup', bookMarks: await getBookmarks()})
+                    } else {
+                        console.warn('Cannot inject script into this page:', url)
+                    }
                 }
-            }
-        });
+            });
+        }
+    })
+}
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+    if (changeInfo.status === 'complete') {
+        startListener()
     }
 })
 

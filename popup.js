@@ -57,9 +57,10 @@ const preSelect = () => {
 const search = event => {
     const value = event.target.value
     const list = document.getElementById('bookmarksSearchList')
+    console.log(bookMarks)
     let listItems = ''
     if (value) {
-        const filterResult = bookMarks.filter(item => item.title.includes(value) || item.url.includes(value))
+        const filterResult = bookMarks.filter(item => item.title.includes(value) || item.url.includes(value) || item.parentTitle?.includes?.(value))
         listItems = filterResult.map(item => `
         <div class="bookmarks-search__list-item" data-url="${ item.url }">${ item.title }</div>
     `).join('')
