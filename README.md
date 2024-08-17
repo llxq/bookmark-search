@@ -1,5 +1,5 @@
 # bookmark-search
-这是一个chroma插件，可以按住 ctrl/command + B 进行搜索您的书签，并且点击打开您的书签。支持上下切换回车打开新页面。
+这是一个chroma插件，可以按住 ctrl/command + B 进行搜索您的书签，并且点击打开您的书签。支持上下切换回车打开新页面。支持文件夹搜索。多层级文件夹使用 `/` 分割。如：`文件夹1/文件夹2/标签1`
 
 # 使用
 - 下载项目到本地
@@ -16,3 +16,6 @@ git clone https://github.com/llxq/bookmark-search.git
     - command + B
    
 ![image](https://github.com/user-attachments/assets/efdea048-6bf5-413d-9897-4bf914bb60b7)
+
+# 注意
+`第一次安装完之后原来曾经打开过的浏览器标签页使用需要刷新页面才能使用。新打开的正常使用即可。`
