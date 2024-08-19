@@ -38,7 +38,11 @@ const startListener = () => {
                 if (tabs[0]) {
                     const url = tabs[0].url
                     if (url && !url.startsWith('chrome://') && !url.startsWith('chrome-extension://')) {
-                        chrome.tabs.sendMessage(tabs[0].id, {action: 'openPopup', bookMarks: await getBookmarks()})
+                        try {
+                            chrome.tabs.sendMessage(tabs[0].id, {action: 'openPopup', bookMarks: await getBookmarks()})
+                        } catch (e) {
+                            console.error('bookmark-search error:', e)
+                        }
                     } else {
                         console.warn('Cannot inject script into this page:', url)
                     }
@@ -48,11 +52,7 @@ const startListener = () => {
     })
 }
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-    if (changeInfo.status === 'complete') {
-        startListener()
-    }
-})
+startListener()
 
 chrome.runtime.onMessage.addListener(message => {
     if (message.action === 'goToBookmark') {
