@@ -9,6 +9,8 @@ const hidden = () => {
             display: 'none',
         })
     }
+    /* 恢复焦点 */
+    window.focus()
 }
 
 const createContent = () => {

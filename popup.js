@@ -2,19 +2,26 @@ let bookMarks = [],
     selectUrl = null
 const isIframe = window.self !== window.top
 
+const close = () => {
+    sendMessage({action: 'closePopup'})
+}
+
 const selectedByUrl = url => {
     if (url) {
         sendMessage({action: 'goToBookmark', url})
-        sendMessage({action: 'closePopup'})
+        close()
     }
 }
 
-const focusInput = () => {
-    const input = document.getElementById('bookmarksSearchInput')
-    if (input) {
-        setTimeout(() => {
-            input.focus()
-        }, 100)
+const focusInput = e => {
+    const action = e.data?.action ?? ''
+    if (action === 'focusInput') {
+        const input = document.getElementById('bookmarksSearchInput')
+        if (input) {
+            setTimeout(() => {
+                input.focus()
+            }, 100)
+        }
     }
 }
 
@@ -57,7 +64,6 @@ const preSelect = () => {
 const search = event => {
     const value = event.target.value
     const list = document.getElementById('bookmarksSearchList')
-    console.log(bookMarks)
     let listItems = ''
     if (value) {
         const filterResult = bookMarks.filter(item => item.title.includes(value) || item.url.includes(value) || item.parentTitle?.includes?.(value))
@@ -95,7 +101,7 @@ chrome.runtime?.onMessage?.addListener(message => {
 window.addEventListener('keydown', event => {
     /* 按下esc关闭 */
     if (event.key === 'Escape') {
-        sendMessage({action: 'closePopup'})
+        close()
     }
 
     /* 按上/下箭头切换 */
