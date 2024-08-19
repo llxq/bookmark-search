@@ -3,7 +3,6 @@
     "name": "Bookmarks search",
     "version": "1.0.0",
     "description": "Search bookmarks",
-        
     "permissions": [
         "tabs",
         "activeTab",
