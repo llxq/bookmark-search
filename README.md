@@ -17,5 +17,8 @@ git clone https://github.com/llxq/bookmark-search.git
    
 ![image](https://github.com/user-attachments/assets/efdea048-6bf5-413d-9897-4bf914bb60b7)
 
+# 搜索结果展示
+![image](https://github.com/user-attachments/assets/5e29e896-48a7-4d4b-9e43-365fbf3a0257)
+
 # 注意
 `第一次安装完之后原来曾经打开过的浏览器标签页使用需要刷新页面才能使用。新打开的正常使用即可。`
