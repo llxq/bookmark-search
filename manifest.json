@@ -7,7 +7,9 @@
         "tabs",
         "activeTab",
         "bookmarks",
-        "windows"
+        "windows",
+        "history",
+        "favicon"
     ],
     "background": {
         "service_worker": "background.js"
