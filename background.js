@@ -1,34 +1,42 @@
+const getFaviconURL = u => {
+    const url = new URL(chrome.runtime.getURL('/_favicon/'))
+    url.searchParams.set('pageUrl', u)
+    url.searchParams.set('size', '24')
+    return url.toString()
+}
+
 const getBookmarks = async () => {
-     return new Promise(async resolve => {
-         const bookmarks = []
+    return new Promise(async resolve => {
+        const bookmarks = []
 
-         /* 拿到所有的书签 */
-         const getBookMarksByNode = (node, parentTitle = '') => {
+        /* 拿到所有的书签 */
+        const getBookMarksByNode = (node, parentTitle = '') => {
             // 如果没有url，则可能是文件夹。记录父节点的title
-             if (node.children) {
-                 node.children.forEach(n => getBookMarksByNode(n, parentTitle ? `${parentTitle}/${node.title}` : node.title))
-             }
-             /* 不留存目录，只查询书签 */
-             if (node.url && node.title) {
-                 bookmarks.push({
-                     url: node.url,
-                     title: node.title,
-                     id: node.id,
-                     parentId: node.parentId,
-                     parentTitle,
-                 })
-             }
-         }
+            if (node.children) {
+                node.children.forEach(n => getBookMarksByNode(n, parentTitle ? `${ parentTitle }/${ node.title }` : node.title))
+            }
+            /* 不留存目录，只查询书签 */
+            if (node.url && node.title) {
+                bookmarks.push({
+                    url: node.url,
+                    title: node.title,
+                    id: node.id,
+                    parentId: node.parentId,
+                    parentTitle,
+                    faviconURL: getFaviconURL(node.url),
+                })
+            }
+        }
 
-         const nodes = await chrome.bookmarks.getTree()
-         if (Array.isArray(nodes)) {
-             nodes.forEach(getBookMarksByNode)
-         } else {
-             getBookMarksByNode(nodes)
-         }
+        const nodes = await chrome.bookmarks.getTree()
+        if (Array.isArray(nodes)) {
+            nodes.forEach(getBookMarksByNode)
+        } else {
+            getBookMarksByNode(nodes)
+        }
 
-         resolve(bookmarks)
-     })
+        resolve(bookmarks)
+    })
 }
 
 const startListener = () => {
@@ -47,7 +55,7 @@ const startListener = () => {
                         console.warn('Cannot inject script into this page:', url)
                     }
                 }
-            });
+            })
         }
     })
 }

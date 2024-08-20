@@ -68,7 +68,10 @@ const search = event => {
     if (value) {
         const filterResult = bookMarks.filter(item => item.title.includes(value) || item.url.includes(value) || item.parentTitle?.includes?.(value))
         listItems = filterResult.map(item => `
-        <div class="bookmarks-search__list-item" data-url="${ item.url }">${ item.title }</div>
+        <div class="bookmarks-search__list-item" data-url="${ item.url }">
+            ${item.faviconURL ? `<img class="bookmarks-search__list-item-favicon" src="${ item.faviconURL }">` : ''}
+            ${ item.title }
+        </div>
     `).join('')
         selectUrl = filterResult[0]?.url
     }
