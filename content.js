@@ -23,8 +23,12 @@ const createContent = () => {
     return iframe
 }
 
-const sendBookMarks = () => {
-    chrome.runtime.sendMessage({action: 'updateBookMarks', bookMarks})
+const sendBookMarks = async () => {
+    try {
+        await chrome.runtime.sendMessage({action: 'updateBookMarks', bookMarks})
+    } catch (e) {
+        console.log('bookmark-search error:', e)
+    }
 }
 
 const focusInput = () => {
@@ -58,7 +62,7 @@ const createContainer = () => {
         const iframe = createContent()
         container.appendChild(iframe)
         document.body.appendChild(container)
-        window.addEventListener('message', e => {
+        window.addEventListener('message', async e => {
             const action = e.data?.action ?? ''
             if (action === 'initSuccess') {
                 focusInput()
@@ -67,7 +71,11 @@ const createContainer = () => {
             } else if (action === 'goToBookmark') {
                 const url = e.data?.url
                 if (url) {
-                    chrome.runtime.sendMessage({action: 'goToBookmark', url})
+                    try {
+                        await chrome.runtime.sendMessage({action: 'goToBookmark', url})
+                    } catch (e) {
+                        console.log('bookmark-search error:', e)
+                    }
                 }
             }
         })

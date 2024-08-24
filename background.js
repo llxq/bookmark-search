@@ -47,12 +47,12 @@ const startListener = () => {
                     const url = tabs[0].url
                     if (url && !url.startsWith('chrome://') && !url.startsWith('chrome-extension://')) {
                         try {
-                            chrome.tabs.sendMessage(tabs[0].id, {action: 'openPopup', bookMarks: await getBookmarks()})
+                          await chrome.tabs.sendMessage(tabs[0].id, {action: 'openPopup', bookMarks: await getBookmarks()})
                         } catch (e) {
-                            console.error('bookmark-search error:', e)
+                            console.log('bookmark-search error:', e)
                         }
                     } else {
-                        console.warn('Cannot inject script into this page:', url)
+                        console.log('Cannot inject script into this page:', url)
                     }
                 }
             })
