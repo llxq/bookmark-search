@@ -65,8 +65,19 @@ const search = event => {
     const value = event.target.value
     const list = document.getElementById('bookmarksSearchList')
     let listItems = ''
+
+    const compare = (compareValue, targetValue) => {
+        if (compareValue && targetValue) {
+            return targetValue.toLowerCase().includes(compareValue.toLowerCase())
+        }
+        return false
+    }
+
     if (value) {
-        const filterResult = bookMarks.filter(item => item.title.includes(value) || item.url.includes(value) || item.parentTitle?.includes?.(value))
+        const filterResult = bookMarks.filter(item => {
+            const { title, url, parentTitle } = item
+            return compare(value, title) || compare(value, url) || compare(value, parentTitle)
+        })
         listItems = filterResult.map(item => `
         <div class="bookmarks-search__list-item" data-url="${ item.url }">
             ${item.faviconURL ? `<img class="bookmarks-search__list-item-favicon" src="${ item.faviconURL }">` : ''}
