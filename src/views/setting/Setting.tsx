@@ -82,8 +82,8 @@ export const Setting = ({ updateTheme }: IOmniSeekTabParams) => {
             </RadioGroup>
           </FormItem>
           <FormItem
-            label="是否通过 :keyword 参数使用默认搜索引擎"
-            tips=":日历 将会使用默认搜索引擎搜索日历"
+            label="是否允许主动使用默认引擎搜索关键字"
+            tips="按住 Ctrl/Command + Enter 通过默认引擎搜索关键字"
           >
             <RadioGroup
               name="useSEKeyword"

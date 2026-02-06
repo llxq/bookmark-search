@@ -12,7 +12,6 @@ import { useSearch } from "./hooks/useSearch.ts";
 
 export const Search = () => {
   const selectedRectRef = useRef<HTMLDivElement>(null);
-  const [selectedRect, setSelectedRect] = useState({ top: 0, height: 0 });
   const [isComposition, setIsComposition] = useState(false);
   const isCompositionRef = useLatest(isComposition);
   const {
@@ -23,7 +22,6 @@ export const Search = () => {
     selectData,
     setSelectData,
     open,
-    getSeKeywords,
     isUseSEKeyword,
   } = useSearch();
   const searchDataRef = useLatest(searchData);
@@ -61,12 +59,6 @@ export const Search = () => {
 
   useLayoutEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
-    setSelectedRect(
-      selectedRectRef.current?.getBoundingClientRect() ?? {
-        top: 0,
-        height: 0,
-      },
-    );
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -77,18 +69,11 @@ export const Search = () => {
       `[data-id="${selectData?.id}"]`,
     );
     if (selectedElement) {
-      // 判断是否在区间内
-      const { top, height } = selectedElement.getBoundingClientRect();
-      const { top: selectedTop, height: selectedHeight } = selectedRect;
-      if (!(top >= selectedTop)) {
-        selectedElement.scrollIntoView({
-          block: "start",
-        });
-      } else if (!(top + height <= selectedTop + selectedHeight)) {
-        selectedElement.scrollIntoView({
-          block: "end",
-        });
-      }
+      selectedElement.scrollIntoView({
+        behavior: "auto",
+        block: "nearest",
+        inline: "nearest",
+      });
     }
   }, [selectData]);
 
@@ -103,7 +88,7 @@ export const Search = () => {
           value={keywords}
           setValue={setKeywords}
           setIsComposition={setIsComposition}
-          onEnter={() => open(selectData)}
+          onEnter={(ctrlKey) => open(selectData, ctrlKey)}
         />
       </div>
       {searchData.length ? (
@@ -170,10 +155,7 @@ export const Search = () => {
             keywords.trim() ? (
               <span>
                 回车即可通过默认浏览器搜索【
-                <span className="keywords">
-                  {isUseSEKeyword ? getSeKeywords() : keywords}
-                </span>
-                】
+                <span className="keywords">{keywords}</span>】
               </span>
             ) : (
               "请输入关键字进行搜索"

@@ -91,14 +91,6 @@ export const useSearch = () => {
     }
   }, [loading, setting]);
 
-  const getSeKeywords = useCallback(() => {
-    return keywords?.trim().startsWith(":") ? keywords.slice(1) : keywords;
-  }, [keywords]);
-
-  const keyWordsIsSEKeyword = useCallback(() => {
-    return keywords?.trim().startsWith(":");
-  }, [keywords]);
-
   const debounceTimeoutRef =
     useRef<TNullable<ReturnType<typeof setTimeout>>>(null);
 
@@ -122,12 +114,6 @@ export const useSearch = () => {
       setSelectData(historyData?.[0]);
       return;
     }
-    // 如果是:开头的，则默认走搜索引擎搜索
-    if (isUseSEKeyword && keyWordsIsSEKeyword()) {
-      setSearchData([]);
-      setSelectData(void 0);
-      return;
-    }
     debounceTimeoutRef.current = setTimeout(debounceSearch, 200);
 
     return () => {
@@ -143,7 +129,7 @@ export const useSearch = () => {
    * 打开
    * @param openData
    */
-  const open = async (openData?: IOmniSearchData) => {
+  const open = async (openData?: IOmniSearchData, ctrlKey?: boolean) => {
     if (isOpening) {
       return;
     }
@@ -159,11 +145,11 @@ export const useSearch = () => {
       // search to default SE
       if (
         (!openData && keywords && +useDefaultSE === 1) ||
-        (isUseSEKeyword && keyWordsIsSEKeyword())
+        (isUseSEKeyword && ctrlKey)
       ) {
         await chrome.search.query({
           disposition: "NEW_TAB",
-          text: keyWordsIsSEKeyword() ? getSeKeywords() : keywords,
+          text: keywords,
         });
       } else {
         // 为空不做任何事情
@@ -223,7 +209,6 @@ export const useSearch = () => {
     selectData,
     setSelectData,
     setting,
-    getSeKeywords,
     isUseSEKeyword,
   };
 };

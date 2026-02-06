@@ -76,7 +76,7 @@ export const CollectManagement = ({ editCollect }: IOmniSeekTabParams) => {
                   className="collect-management__list-item"
                   key={data.id}
                   onClick={() => {
-                    chrome.tabs.create({
+                    void chrome.tabs.create({
                       url: data.url,
                     });
                   }}

@@ -5,7 +5,7 @@ interface ISearchInputProps {
   value: string;
   setValue: (value: string) => void;
   placeholder?: string;
-  onEnter?: () => void;
+  onEnter?: (ctrlKey: boolean) => void;
   setIsComposition?: (value: boolean) => void;
 }
 
@@ -36,7 +36,8 @@ export const SearchInput = ({
       className="search-input__input"
       onKeyDown={(e) => {
         if (e.key === "Enter" && !isComposition) {
-          onEnter?.();
+          // 是否按下ctrl/command键
+          onEnter?.(e.metaKey || e.ctrlKey);
           e.preventDefault();
         }
       }}
